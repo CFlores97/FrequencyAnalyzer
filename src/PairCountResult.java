@@ -22,4 +22,9 @@ public class PairCountResult {
     public int getFrequency(){
         return frequency;
     }
+
+    @Override
+    public String toString() {
+        return "(" + word1 + ", " + word2 + "): " + frequency;
+    }
 }

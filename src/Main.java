@@ -1,14 +1,13 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.FileReader;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 public class Main {
 
     public static void main(String[] args) {
         if (args.length < 2) {
-            System.out.println("Uso: java FrequencyAnalyzer <rutaWordFreq> <rutaPairFreq>");
+            System.out.println("Uso: java Main <rutaWordFreq> <rutaPairFreq>");
             return;
         }
 
@@ -20,26 +19,51 @@ public class Main {
         FrequencyAnalyzer analyzer = new FrequencyAnalyzer(minSupport);
 
         try {
-            // Palabras frecuentes
-            System.out.println("=== Palabras Frecuentes (Soporte >= 5000) ===");
+            // 1) Palabras frecuentes (ordenadas descendentemente)
+            System.out.println("=== Top 10 ítems de 1 palabra (Soporte >= " + minSupport + ") ===");
             ArrayList<WordCountResult> singleWords = analyzer.getSingleFrequentWords(singleWordsFile);
 
-            // Mostrar top 10
             for (int i = 0; i < 10 && i < singleWords.size(); i++) {
-                System.out.println(singleWords.get(i));
+                // Numeramos cada línea (i+1)
+                System.out.println((i + 1) + ") " + singleWords.get(i));
             }
 
-            System.out.println("\n=== Pares Frecuentes (Soporte >= 5000) ===");
+            // 2) Pares frecuentes (ordenados descendentemente)
+            System.out.println("\n=== Top 10 ítems de 2 palabras (Soporte >= " + minSupport + ") ===");
             ArrayList<PairCountResult> pairs = analyzer.getFrequentPairs(pairsFile);
 
-            // Mostrar top 10
             for (int i = 0; i < 10 && i < pairs.size(); i++) {
-                System.out.println(pairs.get(i));
+                System.out.println((i + 1) + ") " + pairs.get(i));
             }
+
+            // 3) "Hallazgos / Análisis" DINÁMICO:
+            System.out.println("\n--- Hallazgos / Análisis Automático ---");
+
+            // a) Palabra con mayor frecuencia
+            if (!singleWords.isEmpty()) {
+                WordCountResult topSingle = singleWords.get(0); // La primera es la de mayor frecuencia
+                System.out.println("• La palabra con mayor frecuencia es '"
+                        + topSingle.getWord() + "' con "
+                        + topSingle.getFrequency() + " apariciones.");
+            } else {
+                System.out.println("• No hay palabras con frecuencia >= " + minSupport);
+            }
+
+            // b) Par con mayor frecuencia
+            if (!pairs.isEmpty()) {
+                PairCountResult topPair = pairs.get(0); // El primero es el de mayor frecuencia
+                System.out.println("• El par con mayor frecuencia es ('"
+                        + topPair.getWord1() + "', '"
+                        + topPair.getWord2() + "') con "
+                        + topPair.getFrequency() + " apariciones.");
+            } else {
+                System.out.println("• No hay pares con frecuencia >= " + minSupport);
+            }
+
+            System.out.println("\n(Agrega más lógica si deseas un análisis más detallado.)");
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }
