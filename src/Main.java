@@ -60,8 +60,6 @@ public class Main {
                 System.out.println("• No hay pares con frecuencia >= " + minSupport);
             }
 
-            System.out.println("\n(Agrega más lógica si deseas un análisis más detallado.)");
-
         } catch (IOException e) {
             e.printStackTrace();
         }
